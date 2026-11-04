@@ -1,0 +1,12 @@
+/tmp/
+*.class
+/out/
+/build/
+/target/
+*.log
+*.tmp
+*.swp
+*~
+.env
+.env.*
+!.env.example
