@@ -60,7 +60,7 @@ public class CalcolatriceServer {
                 return num1 * num2;
             case "/":
                 if (num2 == 0)
-                    throw new ArithmeticException("Divisione per zero");
+                    throw new ArithmeticException("Divisione per zero"); //TODO: sviluppo ArithmeticException
                 return num1 / num2;
             default:
                 throw new IllegalArgumentException("Operazione non supportata");
