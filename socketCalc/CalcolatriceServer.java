@@ -67,5 +67,9 @@ public class CalcolatriceServer {
         }
     }
 
+    // TO DO: Contatore operazioni eseguite
+    // TO DO: Comando "QUIT" per chiusura
+    // TO DO: Chiusura corretta delle risorse
+
 }
 
