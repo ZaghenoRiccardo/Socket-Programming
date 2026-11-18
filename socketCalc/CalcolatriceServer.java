@@ -22,53 +22,43 @@ public class CalcolatriceServer {
     }
 
     private static void handleRequest(Socket client) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+    	BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+    	PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 
-        String riga = br.readLine();
+    	String riga;
+	    while ((riga = br.readLine()) != null) {
+	        riga = riga.trim();
 
-        if (riga == null) {
-            System.out.println("Input nullo, richiesta scaduta.");
-            return;
-        } else{
+	        if (riga.equalsIgnoreCase("quit")) {
+	            attivo = false;
+	            out.println("Server in chiusura");
+	            return;
+	        }
 
-            riga = riga.trim();
+	        String[] parti = riga.split("\\s+");
+	        if (parti.length != 3) {
+	            out.println("ERRORE: Formato non valido");
+	            continue;
+	        }
 
-            if (riga.equals("quit")) {
-                attivo = false;
-                out.println("Server in chiusura");
-                return;
-            } else{
+	        try {
+	            double num1 = Double.parseDouble(parti[0]);
+	            double num2 = Double.parseDouble(parti[2]);
 
-                String[] parti = riga.split("\\s+");
-                if (parti.length != 3) {
-                    out.println("ERRORE: Formato non valido");
-                    return;
-                }
+	            if (!Double.isFinite(num1) || !Double.isFinite(num2)) {
+	                out.println("ERRORE: Sono ammessi soltanto numeri finiti");
+	                continue;
+	            }
 
-                try {
-                    double num1 = Double.parseDouble(parti[0]);
-                    String operazione = parti[1];
-                    double num2 = Double.parseDouble(parti[2]);
+	            out.println("RISULTATO: " + calcola(num1, parti[1], num2));
 
-                    if (!Double.isFinite(num1) || !Double.isFinite(num2)) {
-                        out.println("ERRORE: Sono ammessi soltanto numeri finiti");
-                        return;
-                    }
-
-                    double risultato = calcola(num1, operazione, num2);
-                    out.println("RISULTATO: " + risultato);
-
-                } catch (NumberFormatException e) {
-                    out.println("ERRORE: Numero non valido");
-                } catch (ArithmeticException | IllegalArgumentException e) {
-                    out.println("ERRORE: " + e.getMessage());
-                }
-            }
-            
-        }
-
-    }
+	        } catch (NumberFormatException e) {
+	            out.println("ERRORE: Numero non valido");
+	        } catch (ArithmeticException | IllegalArgumentException e) {
+	            out.println("ERRORE: " + e.getMessage());
+	        }
+	    }
+	}
 
     private static double calcola(double num1, String operazione, double num2) {
         double risultato;
