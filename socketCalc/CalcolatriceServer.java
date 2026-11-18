@@ -12,7 +12,6 @@ public class CalcolatriceServer {
 
             while (attivo) {
                 try (Socket client = serverSocket.accept()) {
-                    client.setSoTimeout(5000);
                     handleRequest(client);
                 } catch (IOException error) {
                     System.err.println("Errore richiesta: " + error.getMessage());
