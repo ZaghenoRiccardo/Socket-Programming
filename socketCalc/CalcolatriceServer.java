@@ -11,10 +11,18 @@ public class CalcolatriceServer {
             System.out.println("Server avviato sulla porta " + PORTA);
 
             while (attivo) {
-                try (Socket client = serverSocket.accept()) {
-                    handleRequest(client);
-                } catch (IOException error) {
-                    System.err.println("Errore richiesta: " + error.getMessage());
+                try {
+                    Socket client = serverSocket.accept();
+                    client.setSoTimeout(60000);
+                    new Thread(() -> {
+                        try (client) {
+                            handleRequest(client);
+                        } catch (IOException e) {
+                            System.err.println("Errore richiesta: " + e.getMessage());
+                        }
+                    }).start();
+                } catch (IOException e) {
+                    System.err.println("Errore accept: " + e.getMessage());
                 }
             }
         }
